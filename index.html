@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seth Richey — CS 499 ePortfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0c0f;
+      --surface: #111318;
+      --border: #1e2229;
+      --accent: #00d4aa;
+      --accent2: #0088ff;
+      --text: #c8cdd6;
+      --text-dim: #5a6170;
+      --text-bright: #eef0f4;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ---- NOISE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10,12,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ---- LAYOUT ---- */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child { border-bottom: none; }
+
+    /* ---- HERO ---- */
+    #hero {
+      padding-top: 10rem;
+      padding-bottom: 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      color: var(--text-bright);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.3s;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    /* ---- SECTION HEADERS ---- */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 1rem;
+    }
+
+    p { margin-bottom: 1rem; color: var(--text); font-weight: 300; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ---- SELF ASSESSMENT ---- */
+    .assessment-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .assessment-block h3 {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    /* ---- CODE REVIEW ---- */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* ---- ENHANCEMENT CARDS ---- */
+    .enhancement-card {
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: var(--surface);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-number {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .card-badge {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      white-space: nowrap;
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .card-body p { font-size: 0.95rem; }
+
+    details {
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    summary {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 1rem;
+    }
+
+    summary:hover { color: var(--accent); }
+
+    .narrative-section { margin-bottom: 1.5rem; }
+    .narrative-section h4 {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    pre {
+      background: #0d0f12;
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      overflow-x: auto;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    /* ---- ARTIFACTS ---- */
+    .artifact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .artifact-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    .artifact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .artifact-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .artifact-card .card-number { margin-bottom: 0.6rem; }
+    .artifact-card h3 { color: var(--text-bright); font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .artifact-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+    .artifact-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="#hero">SR // ePortfolio</a>
+    <ul class="nav-links">
+      <li><a href="#assessment">About</a></li>
+      <li><a href="#review">Code Review</a></li>
+      <li><a href="#enhancements">Enhancements</a></li>
+      <li><a href="#artifacts">Artifacts</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <p class="hero-label">CS 499 Capstone ePortfolio</p>
+      <h1>Seth <span>Richey</span></h1>
+      <p class="hero-sub">Computer Science — Software Engineering Track<br>Southern New Hampshire University, May 2026</p>
+      <div class="hero-tags">
+        <span class="tag">MEAN Stack</span>
+        <span class="tag">Node.js / Express</span>
+        <span class="tag">MongoDB / Mongoose</span>
+        <span class="tag">JWT Auth</span>
+        <span class="tag">REST APIs</span>
+        <span class="tag">bcrypt</span>
+        <span class="tag">Angular</span>
+        <span class="tag">Full-Stack Development</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELF ASSESSMENT -->
+  <section id="assessment">
+    <div class="container fade-in">
+      <p class="section-label">01 — Introduction</p>
+      <h2>Professional Self-Assessment</h2>
+
+      <div class="assessment-block">
+        <h3>Background</h3>
+        <p>My name is Seth Richey. I am completing a Bachelor of Science in Computer Science with a concentration in Software Engineering at Southern New Hampshire University, graduating May 2026. I came into this program with an interest in how software is built and secured, and I am leaving it with a clear picture of where I want to go: entry-level full-stack or backend development, building systems that are well-structured, secure, and maintainable.</p>
+        <p>Working through the Computer Science program has pushed me to develop across the full stack rather than staying comfortable in one layer. Early courses like IT-145 and CS-250 built my foundation in application development and the software development lifecycle. Later courses like CS-340, CS-405, and CS-465 moved me into real architectural decisions — how data flows through an application, how authentication works at the code level, and what it actually means to write secure software.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Collaborating in a Team Environment</h3>
+        <p>Several courses in the program involved working within structured collaborative processes. CS-250 introduced Agile and Scrum, including sprint planning, retrospectives, and the role of a development team within a larger product cycle. CS-340 involved peer code review as part of the development workflow. These experiences taught me that readable, well-commented code is not just a personal preference — it is a communication tool for everyone who touches the codebase after you.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Communicating with Stakeholders</h3>
+        <p>CS-250 and CS-465 both involved producing documentation and status updates for non-technical audiences. The self-assessment and narratives in this portfolio are themselves an exercise in stakeholder communication — explaining technical decisions in plain language without losing accuracy.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Data Structures and Algorithms</h3>
+        <p>CS-260 covered the core data structures and the algorithmic principles behind searching and sorting. The practical application shows up in Enhancement 2 of this capstone. The dynamic query construction in the Travlr API required thinking carefully about how filter objects are built, how indexes interact with query execution, and where filtering logic should live in the stack. Choosing to filter at the database layer rather than in application code after a full fetch is a straightforward algorithmic trade-off — but making it consciously and being able to explain it is what separates a working implementation from a well-reasoned one.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Software Engineering and Databases</h3>
+        <p>The bulk of my practical software engineering experience comes from CS-465, where Travlr Getaways was originally built, and from this capstone. CS-405 covered secure coding practices including input validation, encryption, and OWASP vulnerability analysis. The Artemis Financial project involved refactoring a Java Spring Boot application to implement AES encryption, SHA-256 hashing, and HTTPS configuration. The Grazioso Salvare dashboard demonstrated full-stack data pipeline work: a Python and Dash frontend backed by MongoDB with dynamic filtering and geospatial mapping.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Security</h3>
+        <p>Security runs through all three enhancements in this portfolio. Enhancement 1 replaced plaintext password storage with bcrypt hashing and introduced JWT-based route protection. Enhancement 2 uses parameterized query construction rather than string concatenation, avoiding injection vulnerabilities. Enhancement 3 ensures the data layer validates input through the Mongoose schema before any write reaches the database. The through-line across all three is that security is not a feature you add at the end — it is a set of decisions you make at every layer of the stack.</p>
+      </div>
+
+      <div class="assessment-block">
+        <h3>Portfolio Summary</h3>
+        <p>The three artifacts in this portfolio all come from a single project: Travlr Getaways, a full-stack travel booking application built on the MEAN stack. Using one project across all three enhancements was a deliberate choice. It allowed me to go deeper rather than wider, and it produced a more honest before-and-after story than three shallow improvements across three separate projects would have.</p>
+        <p>Enhancement 1 hardened the authentication system by replacing plaintext credentials with bcrypt hashing and JWT middleware. Enhancement 2 transformed a single-line database fetch into a flexible query API with search, filtering, and sorting. Enhancement 3 replaced a static JSON file with a live MongoDB connection and added an aggregation pipeline that produces destination-level analytics. Together these three enhancements touch every layer of the application — security, API design, and data architecture.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODE REVIEW -->
+  <section id="review">
+    <div class="container fade-in">
+      <p class="section-label">02 — Code Review</p>
+      <h2>Informal Code Review</h2>
+      <p style="margin-bottom:1.5rem;">Walkthrough of the original Travlr Getaways codebase covering existing functionality, areas for improvement, and the planned enhancements across all three categories.</p>
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/1GdzqghuLZw"
+          title="CS 499 Code Review — Seth Richey"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENHANCEMENTS -->
+  <section id="enhancements">
+    <div class="container fade-in">
+      <p class="section-label">03 — Enhancements</p>
+      <h2>Artifact Enhancements</h2>
+
+      <!-- E1 -->
+      <div class="enhancement-card fade-in">
+        <div class="card-header">
+          <div>
+            <p class="card-number">ENHANCEMENT 01</p>
+            <h3>Software Design and Engineering — bcrypt Authentication</h3>
+          </div>
+          <span class="card-badge">Security</span>
+        </div>
+        <div class="card-body">
+          <p>The original application stored and compared passwords in plaintext with no hashing or salting. This enhancement replaced that system with bcrypt password hashing via a Mongoose pre-save hook and introduced JWT-based middleware to protect write routes across the API.</p>
+          <details>
+            <summary>▶ Read Full Narrative</summary>
+            <div class="narrative-section">
+              <h4>Artifact Description</h4>
+              <p>Travlr Getaways is a full-stack travel booking web application built on the MEAN stack: MongoDB, Express.js, Angular, and Node.js. Developed approximately six months ago in CS-465. The application has two frontends — a server-rendered customer-facing site built with Express and Handlebars, and an Angular SPA for admin management — backed by a REST API secured with JWT authentication.</p>
+            </div>
+            <div class="narrative-section">
+              <h4>Why This Artifact</h4>
+              <p>I selected Travlr Getaways for this enhancement because it contained a real, demonstrable security flaw: passwords were stored and compared in plaintext. There was no hashing, no salting, and no meaningful protection for user credentials. This made it an ideal candidate for a security-focused enhancement because the problem was concrete, the fix was non-trivial, and the before-and-after contrast is clear.</p>
+            </div>
+            <div class="narrative-section">
+              <h4>The Enhancement</h4>
+              <p>The core change was integrating bcrypt into the User model using Mongoose's pre-save hook. When a user document is saved and the password field has been modified, the hook fires before the write completes and replaces the plaintext password with a bcrypt hash at a cost factor of 10. A companion instance method, comparePassword, handles login verification by running bcrypt.compare against the stored hash.</p>
+              <p>One design decision worth explaining is how async bcrypt operations are handled within the Express route structure. Both the pre-save hook and comparePassword are async functions. The hook uses async/await and calls next() only after hashing completes, which ensures Mongoose never writes a plaintext password even if the save is triggered concurrently. The login controller is also fully async, awaiting both the database lookup and the password comparison before issuing a token.</p>
+              <p>The JWT middleware extracts the Bearer token from the Authorization header, verifies it against the JWT_SECRET environment variable, and attaches the decoded payload to req.user. All write routes — POST, PUT, DELETE — are protected behind this middleware. Read routes remain public.</p>
+              <p>One item from the original plan was descoped: a user registration endpoint. Given time constraints and the scope of the other two enhancements, registration was not implemented. User accounts are currently managed directly in the database.</p>
+            </div>
+            <div class="narrative-section">
+              <h4>Reflection</h4>
+              <p>The most valuable thing I learned was how authentication middleware composes in Express. The biggest challenge was understanding the async flow inside the Mongoose pre-save hook — specifically that calling next() before the await resolves would write the plaintext password.</p>
+              <p>This enhancement partially meets <strong>Course Outcome 5</strong> (security mindset, mitigating design flaws, ensuring data privacy) and <strong>Course Outcome 4</strong> (use of industry-standard tools and techniques).</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- E2 -->
+      <div class="enhancement-card fade-in">
+        <div class="card-header">
+          <div>
+            <p class="card-number">ENHANCEMENT 02</p>
+            <h3>Algorithms and Data Structures — Search, Filter, and Sort</h3>
+          </div>
+          <span class="card-badge">Query Design</span>
+        </div>
+        <div class="card-body">
+          <p>The original trip listing was a single Trip.find().exec() call that returned all records in insertion order with no filtering or sorting. This enhancement replaced it with a dynamic query API accepting search terms, date ranges, sort field, and sort order.</p>
+          <details>
+            <summary>▶ Read Full Narrative</summary>
+            <div class="narrative-section">
+              <h4>The Enhancement</h4>
+              <p>The enhanced tripsList function accepts optional query parameters: search, sortBy, order, before, and after. These dynamically construct a MongoDB filter object and sort object before the query executes.</p>
+              <p>The search parameter builds a case-insensitive regular expression applied as an $or condition across destination and description fields. The before and after parameters filter by departureDate using $lte and $gte operators. Both can be applied simultaneously using the spread operator pattern to construct a date range without overwriting either bound.</p>
+              <p>Indexes were added on destination and departureDate to ensure MongoDB resolves filtered queries without full collection scans.</p>
+            </div>
+            <div class="narrative-section">
+              <h4>Pseudocode</h4>
+              <pre>FUNCTION tripsList(req, res):
+  EXTRACT search, sortBy, order, before, after FROM req.query
+
+  SET filter = {}
+
+  IF search EXISTS:
+    SET filter.$or = [destination matches search,
+                      description matches search]
+
+  IF before EXISTS:
+    SET filter.departureDate.$lte = before
+
+  IF after EXISTS:
+    SET filter.departureDate.$gte = after
+
+  SET sortField = sortBy OR 'departureDate'
+  SET sortOrder = IF order == 'desc' THEN -1 ELSE 1
+
+  QUERY Trip.find(filter).sort(sortField, sortOrder)
+  RETURN results as JSON</pre>
+            </div>
+            <div class="narrative-section">
+              <h4>Reflection</h4>
+              <p>The main design decision was where to put the filtering logic — in the database query or in application code after fetching all records. Filtering in the query is clearly correct: it reduces data transferred, uses indexes, and scales with the dataset.</p>
+              <p>This enhancement meets <strong>Course Outcome 3</strong> (designing computing solutions using algorithmic principles, managing trade-offs).</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- E3 -->
+      <div class="enhancement-card fade-in">
+        <div class="card-header">
+          <div>
+            <p class="card-number">ENHANCEMENT 03</p>
+            <h3>Databases — Mongoose Migration and Aggregation Pipeline</h3>
+          </div>
+          <span class="card-badge">Database</span>
+        </div>
+        <div class="card-body">
+          <p>Trip data was originally read from a static JSON file on disk. The Mongoose Trip model existed but was completely disconnected from the application routes. This enhancement replaced all JSON file reads with live Mongoose queries and added an aggregation pipeline for destination analytics.</p>
+          <details>
+            <summary>▶ Read Full Narrative</summary>
+            <div class="narrative-section">
+              <h4>The Enhancement</h4>
+              <p>Every controller function that previously called fs.readFileSync now queries the Trip model directly using Trip.find(), Trip.findById(), Trip.findByIdAndUpdate(), and Trip.findByIdAndDelete(). The Mongoose connection is established in db.js on startup with event listeners for connected, error, and disconnected states.</p>
+              <p>The most significant addition is an aggregation pipeline at GET /api/trips/report. It filters to future trips, casts the price String to a number using $toDouble, groups by destination calculating trip count and price statistics, and sorts by trip count descending.</p>
+              <p>The $addFields cast is worth explaining. Ideally price would be stored as a Number from the start. Migrating existing documents was out of scope, so casting at query time is a practical trade-off that produces correct numeric aggregations without a data migration.</p>
+            </div>
+            <div class="narrative-section">
+              <h4>Pseudocode</h4>
+              <pre>PIPELINE tripsReport:
+
+  STAGE 1 - $match:
+    WHERE departureDate >= today
+
+  STAGE 2 - $addFields:
+    SET priceNum = $toDouble(price)
+
+  STAGE 3 - $group:
+    GROUP BY destination
+    CALCULATE tripCount = $sum(1)
+    CALCULATE avgPrice  = $avg(priceNum)
+    CALCULATE minPrice  = $min(priceNum)
+    CALCULATE maxPrice  = $max(priceNum)
+
+  STAGE 4 - $sort:
+    ORDER BY tripCount DESCENDING
+
+  RETURN array of grouped destination summaries</pre>
+            </div>
+            <div class="narrative-section">
+              <h4>Reflection</h4>
+              <p>The most important thing I learned is how much architectural debt can hide in a codebase that appears functional. The app rendered trips because the JSON file existed — but replacing it with a live database connection makes the application honest about what it actually is.</p>
+              <p>This enhancement meets <strong>Course Outcome 4</strong> (well-founded techniques delivering industry-specific value) and partially meets <strong>Course Outcome 3</strong> (design trade-offs in schema design).</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ARTIFACTS -->
+  <section id="artifacts">
+    <div class="container fade-in">
+      <p class="section-label">04 — Artifacts</p>
+      <h2>Project Files</h2>
+      <div class="artifact-grid">
+        <a class="artifact-card full-width" href="https://github.com/DracoRichey/travlr-getaways/tree/module2" target="_blank" rel="noopener">
+          <p class="card-number">PRIMARY ARTIFACT</p>
+          <h3>Travlr Getaways — Enhanced</h3>
+          <p>Full source code including all three enhancements: bcrypt auth, search/filter/sort API, Mongoose migration, and aggregation pipeline. Branch: module2</p>
+        </a>
+        <a class="artifact-card" href="https://www.youtube.com/watch?v=1GdzqghuLZw" target="_blank" rel="noopener">
+          <p class="card-number">VIDEO</p>
+          <h3>Code Review</h3>
+          <p>Walkthrough of original codebase, code analysis, and enhancement plan</p>
+        </a>
+        <a class="artifact-card" href="https://github.com/DracoRichey" target="_blank" rel="noopener">
+          <p class="card-number">GITHUB</p>
+          <h3>DracoRichey</h3>
+          <p>Full GitHub profile including Grazioso Salvare, Artemis Financial, and other program projects</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>Seth Richey &nbsp;·&nbsp; CS 499 Capstone &nbsp;·&nbsp; SNHU May 2026 &nbsp;·&nbsp; <a href="mailto:sethjosiahrichey@gmail.com">sethjosiah richey@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
